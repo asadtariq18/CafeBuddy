@@ -8,11 +8,21 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-firebase/app": "^13.1.0",
+    "@react-native-firebase/database": "^13.1.0",
     "expo": "~43.0.2",
+    "expo-linear-gradient": "^10.0.3",
     "expo-status-bar": "~1.1.0",
+    "firebase": "^9.6.1",
+    "moment": "^2.29.1",
+    "native-base": "^3.2.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
+    "react-native-elements": "^3.4.2",
+    "react-native-gesture-handler": "~1.10.2",
+    "react-native-safe-area-context": "3.2.0",
+    "react-native-svg": "^12.1.1",
     "react-native-web": "0.17.1"
   },
   "devDependencies": {
