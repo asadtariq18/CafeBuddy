@@ -1,29 +1,91 @@
+import { useNavigation } from "@react-navigation/native";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity, Text, View } from "react-native";
+import { TouchableOpacity, Text, View, Linking, TouchableWithoutFeedback } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
 import { COLORS } from "../assets/COLORS";
+import database from "../Database/database";
 
-const OrderHead = ({ orderID, cafeID, status }) => {
-  // useEffect(() => {
-  // }, [orderID]);
-  const onPress = () => {};
+const OrderHead = ({ order }) => {
+  const navigation = useNavigation()
+  useEffect(() => {
+
+  }, [order]);
+  const handleLocationPress = () => {
+    Linking.openURL(order.location);
+  };
+  const handleAcceptPress = () => {
+    database.orderAccept(order.userID, order.orderID, order.cafeID);
+  };
+    const handleOrderDetails = () => {
+      navigation.navigate("Order Detail", {order:{order}})
+    };
+    if(order.status === "Accepted"){
+      return (
+        <TouchableWithoutFeedback onPress={handleOrderDetails}>
+          <View style={styles.container}>
+            <View style={styles.content}>
+              <Text style={styles.name}>{order.orderID}</Text>
+              <Text style={styles.name}>
+                {/* {moment(order.timestamp, "YYYYMMDDhhmmss").fromNow()}{" "} */}
+                Bill: {order.total}
+              </Text>
+              <Text style={styles.name}> </Text>
+            </View>
+            <TouchableOpacity
+              style={{ alignSelf: "flex-end" }}
+              onPress={handleLocationPress}
+            >
+              <View style={{ flexDirection: "row", marginBottom: 5 }}>
+                <Text style={styles.button}> Location </Text>
+              </View>
+            </TouchableOpacity>
+           
+          </View>
+        </TouchableWithoutFeedback>
+      );
+    }
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <View style={styles.content}>
-        <Text style={styles.name}>{orderID} </Text>
-        <Text style={styles.commentText}>{status}</Text>
+    <TouchableWithoutFeedback onPress={handleOrderDetails}>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.name}>{order.orderID}</Text>
+          <Text style={styles.name}>
+            {/* {moment(order.timestamp, "YYYYMMDDhhmmss").fromNow()}{" "} */}
+            Bill: {order.total}
+          </Text>
+          <Text style={styles.name}> </Text>
+        </View>
+        <TouchableOpacity
+          style={{ alignSelf: "flex-end" }}
+          onPress={handleLocationPress}
+        >
+          <View style={{ flexDirection: "row", marginBottom: 5 }}>
+            <Text style={styles.button}> Location </Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ alignSelf: "flex-end" }}
+          onPress={handleAcceptPress}
+        >
+          <View style={{ flexDirection: "row", marginBottom: 5 }}>
+            <Text style={styles.button2}> Accept </Text>
+          </View>
+        </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: "space-between",
     borderRadius: 10,
-    backgroundColor: "#ffafbd",
+    backgroundColor: COLORS.button,
     flexDirection: "row",
     marginBottom: 2,
-    padding: 5,
+    padding: 8,
+    paddingVertical: 10
   },
   name: {
     fontWeight: "bold",
@@ -41,6 +103,21 @@ const styles = StyleSheet.create({
   content: {
     alignSelf: "center",
     paddingEnd: 40,
+    paddingStart: 5
+  },
+  button2: {
+    color: COLORS.font,
+    backgroundColor: "#006400",
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  button: {
+    color: COLORS.font,
+    backgroundColor: COLORS.secondary,
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
 });
 export default OrderHead;

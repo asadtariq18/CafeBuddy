@@ -1,51 +1,115 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+  ImageBackground,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
   View,
+  Image,
+  LogBox
 } from "react-native";
 // import ContextMenu from "react-native-context-menu-view";
+import { useNavigation } from "@react-navigation/native";
 import { Icon } from "react-native-elements";
 import Card from "../../Components/Card";
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS } from "../../assets/COLORS";
 import OrdersList from "../../Components/OrdersList";
+import RNRestart from "react-native-restart";
+import database from "../../Database/database";
 
-const HomeScreen = () => {
-  const [pending, setPending] = useState(true);
+const HomeScreen = ({ navigation }) => {
+  //const navigation = useNavigation();
+  const [pending, setPending] = useState(false);
+  const [upcoming, setUpcoming] = useState(true);
   const [completed, setCompleted] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+const [ordersList, setOrdersList] = useState([])
+ LogBox.ignoreLogs([
+   "Setting a timer for a long period of time",
+   `fontFamily "Roboto_medium" is not a system font and has not been loaded through Font.loadAsync.
+
+- If you intended to use a system font, make sure you typed the name correctly and that it is supported by your device operating system.
+
+- If this is a custom font, be sure to load it with Font.loadAsync.`,
+   `VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.`,
+   "`flexWrap: `wrap`` is not supported with the `VirtualizedList` components.Consider using `numColumns` with `FlatList` instead.",
+   `Each child in a list should have a unique "key" prop.`,
+ ]);
+  useEffect(() => {
+   let orders = database.getOrders("trp123")
+   if(orders){
+     setOrdersList(Object.values(orders))
+   }
+  }, [pending, completed, upcoming])
 
   const pendingList = () => {
+    // RNRestart.Restart();
     setPending(true);
     setCompleted(false);
+    setUpcoming(false);
   };
   const completedList = () => {
-    setPending(false);
     setCompleted(true);
+    setPending(false);
+    setUpcoming(false);
+  };
+  const upcomingList = () => {
+    setUpcoming(true);
+    setPending(false);
+    setCompleted(false);
   };
   const handleShowMenu = () => {
     setShowMenu(!showMenu);
   };
+  const handleEditMenu = () => {
+    navigation.navigate("Order");
+  };
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient colors={["#ffafbd", "#ffc3a0"]} style={styles.screenView}>
+      <ImageBackground
+        source={{
+          uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSER2bZits40wUm0l6ZmkL5vO6Pm2KXNxwXTw&usqp=CAU",
+        }}
+        style={styles.screenView}
+      >
         <StatusBar style="auto" />
+        <View style={{ marginHorizontal: 5, alignSelf: "flex-start" }}>
+          <Text style={styles.heading2}>Menu</Text>
+        </View>
         <View
           style={{
-            justifyContent: "center",
-            alignItems: "flex-end",
-            marginTop: 70,
-            marginEnd: 25,
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+            marginTop: 10,
+            marginStart: 10,
+            flexDirection: "row",
           }}
         >
-          <TouchableWithoutFeedback onPress={handleShowMenu}>
-            <Icon name="menu" color={COLORS.secondary} />
+          <TouchableWithoutFeedback onPress={() => navigation.navigate("Menu")}>
+            <View style={styles.titleUnfocused}>
+              <Image
+                style={styles.image}
+                source={require("../../assets/menu.png")}
+              />
+              <Text style={styles.text}>Menu</Text>
+            </View>
           </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate("Update Menu")}
+          >
+            <View style={styles.titleUnfocused}>
+              <Image
+                style={styles.image}
+                source={require("../../assets/editMenu.png")}
+              />
+              <Text style={styles.text}>Edit Menu</Text>
+            </View>
+          </TouchableWithoutFeedback>
+
           {/* {showMenu ? (
             <ContextMenu
               actions={[{ title: "Title 1" }, { title: "Title 2" }]}
@@ -59,22 +123,44 @@ const HomeScreen = () => {
             </ContextMenu>
           ) : null} */}
         </View>
+        <View
+          style={{
+            justifyContent: "flex-end",
+            alignSelf: "flex-start",
+            flexDirection: "row",
+          }}
+        >
+          {/* <TouchableWithoutFeedback onPress={handleShowMenu}>
+            <Icon
+              style={{ alignSelf: "flex-end", marginEnd: 10 }}
+              name="menu"
+              color={COLORS.button}
+            />
+          </TouchableWithoutFeedback> */}
+        </View>
         <View style={styles.topView}>
           <View style={{ marginHorizontal: 5 }}>
-            <Text style={styles.heading1}>Drawer</Text>
-            <TouchableWithoutFeedback onPress={pendingList}>
-              <View style={styles.titleUnfocused}>
-                <Text style={styles.text}>Edit Menu</Text>
-              </View>
-            </TouchableWithoutFeedback>
+            <Text style={styles.heading2}>Orders</Text>
           </View>
         </View>
         <View style={{ width: "100%", height: "50%" }}>
           <View style={styles.title}>
+            <TouchableWithoutFeedback onPress={upcomingList}>
+              {upcoming ? (
+                <View style={styles.titleFocused}>
+                  <Text style={styles.text2}>Upcoming</Text>
+                </View>
+              ) : (
+                <View style={styles.titleUnfocused}>
+                  <Text style={styles.text}>Upcoming</Text>
+                </View>
+              )}
+            </TouchableWithoutFeedback>
+
             <TouchableWithoutFeedback onPress={pendingList}>
               {pending ? (
                 <View style={styles.titleFocused}>
-                  <Text style={styles.text}>Pending</Text>
+                  <Text style={styles.text2}>Pending</Text>
                 </View>
               ) : (
                 <View style={styles.titleUnfocused}>
@@ -86,7 +172,7 @@ const HomeScreen = () => {
             <TouchableWithoutFeedback onPress={completedList}>
               {completed ? (
                 <View style={styles.titleFocused}>
-                  <Text style={styles.text}>Completed</Text>
+                  <Text style={styles.text2}>Completed</Text>
                 </View>
               ) : (
                 <View style={styles.titleUnfocused}>
@@ -96,14 +182,12 @@ const HomeScreen = () => {
             </TouchableWithoutFeedback>
           </View>
           <View style={styles.listContainer}>
-            {pending ? (
-              <OrdersList status={"pending"} />
-            ) : (
-              <OrdersList status={"completed"} />
-            )}
+            {upcoming ? <OrdersList ordersList={ordersList} status={"New"} /> : null}
+            {pending ? <OrdersList ordersList={ordersList} status={"Accepted"} /> : null}
+            {completed ? <OrdersList ordersList={ordersList} status={"Completed"} /> : null}
           </View>
         </View>
-      </LinearGradient>
+      </ImageBackground>
     </SafeAreaView>
   );
 };
@@ -127,7 +211,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 5,
     borderRadius: 20,
-    backgroundColor: "#f343",
+    backgroundColor: COLORS.button,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -153,16 +237,37 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     alignSelf: "flex-start",
-    marginHorizontal: 30,
-    color: COLORS.secondary,
+    marginTop: 5,
+    marginHorizontal: 20,
+    color: COLORS.background_dark,
+    fontWeight: "bold",
+  },
+  text2: {
+    fontSize: 15,
+    alignSelf: "flex-start",
+    marginHorizontal: 20,
+    color: COLORS.font,
     fontWeight: "bold",
   },
   heading1: {
     fontSize: 25,
     alignSelf: "flex-start",
-    marginHorizontal: 30,
+    marginHorizontal: 20,
     color: COLORS.secondary,
     fontWeight: "bold",
+  },
+  heading2: {
+    fontSize: 20,
+    alignSelf: "center",
+    marginTop: 5,
+    marginHorizontal: 20,
+    color: COLORS.button,
+    fontWeight: "bold",
+  },
+  image: {
+    width: 40,
+    height: 40,
+    marginBottom: 4,
   },
 });
 export default HomeScreen;
