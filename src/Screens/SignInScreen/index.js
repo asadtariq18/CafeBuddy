@@ -83,78 +83,14 @@ const SignInScreen = () => {
   };
 
   const onLoginPress = async () => {
-    try {
-      if (phone !== "" && password !== "") {
-        setLoggingIn(true);
-        await auth.signInWithEmailAndPassword(phone, password);
-        if (auth.currentUser.emailVerified === false) {
-          ToastAndroid.showWithGravityAndOffset(
-            "Verify Your email first.",
-            ToastAndroid.SHORT,
-            ToastAndroid.CENTER,
-            25,
-            50
-          );
-          navigation.navigate("Email Verification Screen", { mail });
-        } else {
-          Database.getUpdatedUserData(mail);
-          const user = database.getCurrentUser();
-          await AsyncStorage.setItem("user", JSON.stringify(user));
-          setUser(user);
-          setLoggingIn(false);
-          ToastAndroid.showWithGravityAndOffset(
-            "Logged in",
-            ToastAndroid.SHORT,
-            ToastAndroid.CENTER,
-            25,
-            50
-          );
-          navigation.getParent.navigate("AppStack");
-        }
-      }
-    } catch (error) {
-      if (
-        error.message ===
-        "There is no user record corresponding to this identifier. The user may have been deleted."
-      ) {
-        setLoggingIn(false);
-        ToastAndroid.showWithGravityAndOffset(
-          "This email address is not registered",
-          ToastAndroid.SHORT,
-          ToastAndroid.CENTER,
-          25,
-          50
-        );
-      } else if (
-        error.message ===
-        "The password is invalid or the user does not have a password."
-      ) {
-        setLoggingIn(false);
-        ToastAndroid.showWithGravityAndOffset(
-          "Wrong credentials",
-          ToastAndroid.SHORT,
-          ToastAndroid.CENTER,
-          25,
-          50
-        );
-      } else {
-        setLoggingIn(false);
-        ToastAndroid.showWithGravityAndOffset(
-          "An error occurred",
-          ToastAndroid.SHORT,
-          ToastAndroid.CENTER,
-          25,
-          50
-        );
-      }
-    }
+    alert("login Pressed")
   };
 
   const onSignUpPress = () => {
     navigation.navigate("SignUp");
   };
   const onForgotPasswordPress = () => {
-    navigation.navigate("Forgot Password");
+    // navigation.navigate("Forgot Password");
   };
   return (
     <SafeAreaView style={styles.container}>
