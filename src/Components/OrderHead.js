@@ -16,6 +16,7 @@ const OrderHead = ({ order }) => {
   };
   const handleAcceptPress = () => {
     database.orderAccept(order.userID, order.orderID, order.cafeID);
+    navigation.navigate("Home")
   };
     const handleOrderDetails = () => {
       navigation.navigate("Order Detail", {order:{order}})
@@ -25,12 +26,12 @@ const OrderHead = ({ order }) => {
         <TouchableWithoutFeedback onPress={handleOrderDetails}>
           <View style={styles.container}>
             <View style={styles.content}>
-              <Text style={styles.name}>{order.orderID}</Text>
+              <Text style={styles.name}>{moment(order.timestamp, "YYYYMMDDhhmmss").fromNow()}</Text>
               <Text style={styles.name}>
                 {/* {moment(order.timestamp, "YYYYMMDDhhmmss").fromNow()}{" "} */}
                 Bill: {order.total}
               </Text>
-              <Text style={styles.name}> </Text>
+              <Text style={styles.name}>Name: {order.customerName} </Text>
             </View>
             <TouchableOpacity
               style={{ alignSelf: "flex-end" }}
@@ -49,29 +50,33 @@ const OrderHead = ({ order }) => {
     <TouchableWithoutFeedback onPress={handleOrderDetails}>
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.name}>{order.orderID}</Text>
+          <Text style={styles.name}>
+            {moment(order.timestamp, "YYYYMMDDhhmmss").fromNow()}
+          </Text>
           <Text style={styles.name}>
             {/* {moment(order.timestamp, "YYYYMMDDhhmmss").fromNow()}{" "} */}
             Bill: {order.total}
           </Text>
-          <Text style={styles.name}> </Text>
+          <Text style={styles.name}>Name: {order.customerName}</Text>
         </View>
-        <TouchableOpacity
-          style={{ alignSelf: "flex-end" }}
-          onPress={handleLocationPress}
-        >
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={styles.button}> Location </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ alignSelf: "flex-end" }}
-          onPress={handleAcceptPress}
-        >
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            <Text style={styles.button2}> Accept </Text>
-          </View>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity
+            style={{ alignSelf: "flex-end" }}
+            onPress={handleAcceptPress}
+          >
+            <View style={{ flexDirection: "row", marginBottom: 8 }}>
+              <Text style={styles.button2}> Accept </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ alignSelf: "flex-end" }}
+            onPress={handleLocationPress}
+          >
+            <View style={{ flexDirection: "row", marginBottom: 2 }}>
+              <Text style={styles.button}> Location </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -80,14 +85,21 @@ const OrderHead = ({ order }) => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
-    borderRadius: 10,
-    backgroundColor: COLORS.button,
+    borderRadius: 20,
+    backgroundColor: "#fe95",
+    borderWidth: 0.5,
+    borderColor: COLORS.primary,
     flexDirection: "row",
-    marginBottom: 2,
-    padding: 8,
-    paddingVertical: 10
+    marginBottom: 4,
+    padding: 10,
+    paddingVertical: 10,
   },
   name: {
+    // backgroundColor: "#ff95",
+    borderRadius: 50,
+    paddingHorizontal: 10,
+    marginBottom: 2,
+
     fontWeight: "bold",
     color: COLORS.font,
   },
@@ -103,18 +115,18 @@ const styles = StyleSheet.create({
   content: {
     alignSelf: "center",
     paddingEnd: 40,
-    paddingStart: 5
+    paddingStart: 5,
   },
   button2: {
     color: COLORS.font,
-    backgroundColor: "#006400",
+    backgroundColor: "#4C9A2A",
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
   button: {
     color: COLORS.font,
-    backgroundColor: COLORS.secondary,
+    backgroundColor: COLORS.primary,
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 4,

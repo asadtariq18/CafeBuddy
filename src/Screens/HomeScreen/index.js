@@ -9,7 +9,8 @@ import {
   TouchableWithoutFeedback,
   View,
   Image,
-  LogBox
+  LogBox,
+  TouchableOpacity,
 } from "react-native";
 // import ContextMenu from "react-native-context-menu-view";
 import { useNavigation } from "@react-navigation/native";
@@ -27,24 +28,24 @@ const HomeScreen = ({ navigation }) => {
   const [upcoming, setUpcoming] = useState(true);
   const [completed, setCompleted] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-const [ordersList, setOrdersList] = useState([])
- LogBox.ignoreLogs([
-   "Setting a timer for a long period of time",
-   `fontFamily "Roboto_medium" is not a system font and has not been loaded through Font.loadAsync.
+  const [ordersList, setOrdersList] = useState([]);
+  LogBox.ignoreLogs([
+    "Setting a timer for a long period of time",
+    `fontFamily "Roboto_medium" is not a system font and has not been loaded through Font.loadAsync.
 
 - If you intended to use a system font, make sure you typed the name correctly and that it is supported by your device operating system.
 
 - If this is a custom font, be sure to load it with Font.loadAsync.`,
-   `VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.`,
-   "`flexWrap: `wrap`` is not supported with the `VirtualizedList` components.Consider using `numColumns` with `FlatList` instead.",
-   `Each child in a list should have a unique "key" prop.`,
- ]);
+    `VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.`,
+    "`flexWrap: `wrap`` is not supported with the `VirtualizedList` components.Consider using `numColumns` with `FlatList` instead.",
+    `Each child in a list should have a unique "key" prop.`,
+  ]);
   useEffect(() => {
-   let orders = database.getOrders("trp123")
-   if(orders){
-     setOrdersList(Object.values(orders))
-   }
-  }, [pending, completed, upcoming])
+    let orders = database.getOrders("trp123");
+    if (orders) {
+      setOrdersList(Object.values(orders));
+    }
+  }, [pending, completed, upcoming]);
 
   const pendingList = () => {
     // RNRestart.Restart();
@@ -68,16 +69,60 @@ const [ordersList, setOrdersList] = useState([])
   const handleEditMenu = () => {
     navigation.navigate("Order");
   };
+  const onLogoutPress = () =>{
+    alert("Logout")
+  }
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
-        source={{
-          uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSER2bZits40wUm0l6ZmkL5vO6Pm2KXNxwXTw&usqp=CAU",
-        }}
+        source={require("../../assets/bg4.jpeg")}
         style={styles.screenView}
       >
         <StatusBar style="auto" />
-        <View style={{ marginHorizontal: 5, alignSelf: "flex-start" }}>
+        <View
+          style={{
+            backgroundColor: "#ff94",
+            marginBottom: 10,
+            borderRadius: 20,
+            paddingVertical: 10,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View
+            style={{
+              marginHorizontal: 5,
+              marginTop: 50,
+              alignSelf: "flex-start",
+            }}
+          >
+            <Text style={styles.heading1}>Cafe Name</Text>
+          </View>
+          <TouchableOpacity onPress={onLogoutPress}>
+          <View
+            style={{
+              marginHorizontal: 0,
+              marginTop: 50,
+              alignSelf: "flex-start",
+            }}
+          >
+            <Image
+              style={styles.icon}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/276/276363.png",
+              }}
+            />
+            <Text style={styles.text}>Logout</Text>
+          </View>
+        </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            marginHorizontal: 5,
+            marginTop: 10,
+            alignSelf: "flex-start",
+          }}
+        >
           <Text style={styles.heading2}>Menu</Text>
         </View>
         <View
@@ -182,9 +227,15 @@ const [ordersList, setOrdersList] = useState([])
             </TouchableWithoutFeedback>
           </View>
           <View style={styles.listContainer}>
-            {upcoming ? <OrdersList ordersList={ordersList} status={"New"} /> : null}
-            {pending ? <OrdersList ordersList={ordersList} status={"Accepted"} /> : null}
-            {completed ? <OrdersList ordersList={ordersList} status={"Completed"} /> : null}
+            {upcoming ? (
+              <OrdersList ordersList={ordersList} status={"New"} />
+            ) : null}
+            {pending ? (
+              <OrdersList ordersList={ordersList} status={"Accepted"} />
+            ) : null}
+            {completed ? (
+              <OrdersList ordersList={ordersList} status={"Completed"} />
+            ) : null}
           </View>
         </View>
       </ImageBackground>
@@ -202,6 +253,7 @@ const styles = StyleSheet.create({
   topView: {
     alignSelf: "flex-start",
     marginVertical: 20,
+    marginTop: 10,
   },
   title: {
     flexDirection: "row",
@@ -211,7 +263,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 5,
     borderRadius: 20,
-    backgroundColor: COLORS.button,
+    backgroundColor: "#0044",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -219,7 +271,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 5,
     borderRadius: 20,
-    backgroundColor: "#fff4",
+    backgroundColor: "#ffe2",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -229,7 +281,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 5,
     borderRadius: 20,
-    backgroundColor: "#fff4",
+    backgroundColor: "#ffe2",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -239,7 +291,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginTop: 5,
     marginHorizontal: 20,
-    color: COLORS.background_dark,
+    color: COLORS.font,
     fontWeight: "bold",
   },
   text2: {
@@ -250,24 +302,31 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   heading1: {
-    fontSize: 25,
+    fontSize: 29,
     alignSelf: "flex-start",
     marginHorizontal: 20,
-    color: COLORS.secondary,
+    color: COLORS.font,
     fontWeight: "bold",
   },
   heading2: {
-    fontSize: 20,
+    fontSize: 25,
     alignSelf: "center",
     marginTop: 5,
     marginHorizontal: 20,
-    color: COLORS.button,
+    color: COLORS.font,
     fontWeight: "bold",
   },
   image: {
     width: 40,
     height: 40,
     marginBottom: 4,
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginBottom: 0,
+    alignSelf: "center",
   },
 });
 export default HomeScreen;

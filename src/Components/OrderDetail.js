@@ -17,29 +17,38 @@ const OrderDetail = ({basket, total, location}) => {
     Linking.openURL(location);
   };
   return (
-    <View style={{}}>
-      <View style={{ flexDirection: "row", alignSelf: "flex-end" }}>
-        <Text style={styles.label}> Quantity </Text>
-        <Text style={styles.label}> Price </Text>
-      </View>
-      <FlatList
-        contentContainerStyle={{
-          justifyContent: "center",
-          paddingBottom: 20,
+    <View>
+      <View
+        style={{
+          backgroundColor: "#ff94",
+          marginBottom: 10,
+          borderRadius: 20,
+          paddingVertical: 10,
         }}
-        showsVerticalScrollIndicator={false}
-        data={basket}
-        keyExtractor={({ id }) => id}
-        renderItem={({ item }) => (
-          <Item
-            image={item.image}
-            name={item.name}
-            price={item.price}
-            quantity={item.quantity}
-          />
-        )}
-      />
-      <TouchableOpacity onPress={handleLocationPress}>
+      >
+        <View style={{ flexDirection: "row", alignSelf: "flex-end" }}>
+          <Text style={styles.label}> Quantity </Text>
+          <Text style={styles.label}> Price </Text>
+        </View>
+        <FlatList
+          contentContainerStyle={{
+            justifyContent: "center",
+            paddingBottom: 20,
+          }}
+          showsVerticalScrollIndicator={false}
+          data={basket}
+          keyExtractor={({ id }) => id}
+          renderItem={({ item }) => (
+            <Item
+              image={item.image}
+              name={item.name}
+              price={item.price}
+              quantity={item.quantity}
+            />
+          )}
+        />
+
+        {/* <TouchableOpacity onPress={handleLocationPress}>
       <View
         style={{
           backgroundColor: COLORS.secondary,
@@ -51,12 +60,15 @@ const OrderDetail = ({basket, total, location}) => {
       >
         <Text style={styles.total}> Location </Text>
       </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      </View>
       <View
         style={{
-          backgroundColor: COLORS.button,
+          backgroundColor: "#ff95",
+          borderRadius: 50,
           width: Dimensions.get("window").width,
           height: 80,
+          marginBottom: 15,
           justifyContent: "center",
           alignItems: "center",
         }}

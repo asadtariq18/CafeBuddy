@@ -14,14 +14,14 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 5,
     fontSize: 20,
-    color: COLORS.background_dark,
+    color: COLORS.font,
   },
   label: {
     paddingVertical: 2,
     marginHorizontal: 25,
     fontSize: 20,
     fontWeight: "bold",
-    color: COLORS.background_dark,
+    color: COLORS.font,
   },
   total: {
     marginHorizontal: 25,
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginHorizontal: 25,
     fontSize: 20,
-    color: COLORS.background_dark,
+    color: COLORS.font,
   },
 });
 

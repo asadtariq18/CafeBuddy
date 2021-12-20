@@ -18,6 +18,7 @@ import Card from "../../Components/Card";
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS } from "../../assets/COLORS";
 import OrdersList from "../../Components/OrdersList";
+import MenuList from "../../Components/MenuList";
 
 const ViewMenuScreen = ({ navigation }) => {
   //const navigation = useNavigation();
@@ -38,14 +39,31 @@ const ViewMenuScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
-        source={{
-          uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSER2bZits40wUm0l6ZmkL5vO6Pm2KXNxwXTw&usqp=CAU",
-        }}
+        source={require("../../assets/bg4.jpeg")}
         style={styles.screenView}
       >
         <StatusBar style="auto" />
-       <ActivityIndicator color={COLORS.button} size={50} />
-       <Text style={styles.text}> Loading Menu</Text>
+        <View
+          style={{
+            backgroundColor: "#ff94",
+            marginBottom: 10,
+            borderRadius: 20,
+            paddingVertical: 10,
+          }}
+        >
+          <View
+            style={{
+              marginHorizontal: 5,
+              marginTop: 50,
+              alignSelf: "flex-start",
+            }}
+          >
+            <Text style={styles.heading1}>Menu</Text>
+          </View>
+        </View>
+        <MenuList />
+        {/* <ActivityIndicator color={COLORS.button} size={50} />
+       <Text style={styles.text}> Loading Menu</Text> */}
       </ImageBackground>
     </SafeAreaView>
   );
@@ -57,8 +75,6 @@ const styles = StyleSheet.create({
   },
   screenView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   topView: {
     alignSelf: "flex-start",
@@ -98,13 +114,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   text: {
-    fontSize: 15,
+    fontSize: 25,
     marginHorizontal: 20,
     color: COLORS.background_dark,
     fontWeight: "bold",
   },
   text2: {
-    fontSize: 15,
+    fontSize: 25,
     alignSelf: "flex-start",
     marginHorizontal: 20,
     color: COLORS.font,
@@ -114,7 +130,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     alignSelf: "flex-start",
     marginHorizontal: 20,
-    color: COLORS.secondary,
+    color: COLORS.font,
     fontWeight: "bold",
   },
   heading2: {

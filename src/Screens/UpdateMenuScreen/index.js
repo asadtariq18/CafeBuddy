@@ -1,170 +1,135 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  ImageBackground,
   SafeAreaView,
-  ScrollView,
-  StyleSheet,
   Text,
-  TextInput,
-  TouchableWithoutFeedback,
   View,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  ToastAndroid,
+  StatusBar,
+  ImageBackground,
 } from "react-native";
-// import ContextMenu from "react-native-context-menu-view";
 import { useNavigation } from "@react-navigation/native";
-import { Icon } from "react-native-elements";
-import Card from "../../Components/Card";
-import { LinearGradient } from "expo-linear-gradient";
-import { COLORS } from "../../assets/COLORS";
-import OrdersList from "../../Components/OrdersList";
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
 
-const UpdateMenuScreen = ({ navigation }) => {
-  //const navigation = useNavigation();
+import styles from "./style";
+import database from "../../Database/database";
+import { COLORS } from "../../assets/COLORS";
+
+const UpdateMenuScreen = () => {
   const [itemName, setItemName] = useState("");
   const [price, setPrice] = useState(0);
+  const [isEmpty, setIsEmpty] = useState(true);
+  const [image, setImage] = useState(null);
+  const navigation = useNavigation();
 
-  const onChangeItemName = (val) => {
-    setItemName(val);
-  };
-  const onChangePrice = (val) => {
-    setPrice(val);
+  const onChangeItemName = (input1) => {
+    setItemName(input1);
+    if (input1 !== "" && price !== 0) {
+      setIsEmpty(false);
+    } else {
+      setIsEmpty(true);
+    }
   };
 
-  const handleAdd = () => {
-    // navigation.navigate("Order")
-    alert(price);
+  const onChangePrice = (input2) => {
+    setPrice(input2);
+    if (itemName !== "" && input2 !== 0) {
+      setIsEmpty(false);
+    } else {
+      setIsEmpty(true);
+    }
+  };
+
+  const onAddPress = async () => {
+    if (itemName !== "" && price !== 0) {
+      database.addItemToMenu("Aaska123", itemName, image, price);
+      setPrice(0);
+      setItemName("");
+      setImage("");
+      alert("add pressed");
+    } else {
+      alert("Fill all the fields");
+    }
+  };
+
+  const onAddImagePress = async () => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (granted) {
+      let data = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.5,
+      });
+      if (!data.cancelled) {
+        setImage(data.uri);
+      }
+    } else {
+      Alert.alert("you need to give permission to work");
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
-        source={{
-          uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSER2bZits40wUm0l6ZmkL5vO6Pm2KXNxwXTw&usqp=CAU",
-        }}
+        source={require("../../assets/bg4.jpeg")}
         style={styles.screenView}
       >
-        <StatusBar style="auto" />
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Text style={styles.text}>Add item to the menu</Text>
+        <StatusBar translucent backgroundColor="transparent" />
+        <View>
+          {image ? (
+            <Image
+              style={styles.image}
+              source={{
+                uri: image,
+              }}
+            />
+          ) : (
+            <Image
+              style={styles.image}
+              source={{
+                uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT37lYTYwMRhc3E8mqHP9-ip6856c95LOwKU-1uVC2TkbDnePWy5OieKxIg-FDSFHAcEs8&usqp=CAU",
+              }}
+            />
+          )}
+          <TouchableOpacity onPress={onAddImagePress}>
+            <Text style={styles.button2}>Add Image</Text>
+          </TouchableOpacity>
           <TextInput
-            placeholder="Item name"
+            placeholder="Food Item Name"
+            value={itemName}
             placeholderTextColor={COLORS.font_secondary}
             selectionColor={COLORS.primary}
             style={styles.textInput}
-            onChangeText={(value) => {
-              onChangeItemName(value.trim());
-            }}
+            onChangeText={(value) => onChangeItemName(value.trim())}
           ></TextInput>
+
           <TextInput
+            keyboardType="number-pad"
+            value={price}
             placeholder="Price"
-            keyboardType={"number-pad"}
             placeholderTextColor={COLORS.font_secondary}
             selectionColor={COLORS.primary}
             style={styles.textInput}
-            onChangeText={(value) => {
-              onChangePrice(value.trim());
-            }}
+            onChangeText={(value) => onChangePrice(value.trim())}
           ></TextInput>
-            {itemName.length > 1 && price > 9 ? (
-          <TouchableWithoutFeedback onPress={handleAdd}>
-              <View style={styles.titleFocused}>
-                <Text style={styles.text2}>Add to Menu</Text>
+
+          <TouchableOpacity onPress={onAddPress}>
+            {isEmpty ? (
+              <View style={styles.buttonView}>
+                <Text style={styles.button1}>Add Item</Text>
               </View>
-          </TouchableWithoutFeedback>
             ) : (
-              <View style={styles.titleUnfocused}>
-                <Text style={styles.text}>Add to Menu</Text>
+              <View style={styles.buttonView}>
+                <Text style={styles.button2}>Add Item</Text>
               </View>
             )}
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  screenView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  topView: {
-    alignSelf: "flex-start",
-    marginVertical: 20,
-  },
-  title: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-  },
-  titleFocused: {
-    padding: 10,
-    margin: 5,
-    borderRadius: 20,
-    backgroundColor: COLORS.button,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  titleUnfocused: {
-    padding: 10,
-    margin: 5,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: COLORS.primary,
-    backgroundColor: "#fff4",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  listContainer: {
-    minHeight: "70%",
-    flexWrap: "wrap",
-    padding: 10,
-    margin: 5,
-    borderRadius: 20,
-    backgroundColor: "#fff0",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    fontSize: 15,
-    marginHorizontal: 20,
-    color: COLORS.background_dark,
-    fontWeight: "bold",
-  },
-  text2: {
-    fontSize: 15,
-    alignSelf: "flex-start",
-    marginHorizontal: 20,
-    color: COLORS.font,
-    fontWeight: "bold",
-  },
-  heading1: {
-    fontSize: 25,
-    alignSelf: "flex-start",
-    marginHorizontal: 20,
-    color: COLORS.secondary,
-    fontWeight: "bold",
-  },
-  heading2: {
-    fontSize: 25,
-    alignSelf: "center",
-    marginHorizontal: 20,
-    color: COLORS.button,
-    fontWeight: "bold",
-  },
-  textInput: {
-    backgroundColor: "#eee0",
-    borderWidth: 1,
-    borderColor: COLORS.primary,
-    fontSize: 15,
-    height: 50,
-    width: 350,
-    borderRadius: 20,
-    margin: 10,
-    padding: 10,
-    color: COLORS.background_dark,
-  },
-});
 export default UpdateMenuScreen;

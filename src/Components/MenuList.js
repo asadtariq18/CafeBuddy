@@ -4,36 +4,38 @@ import OrderHead from "./OrderHead";
 // import orders from "../Database/orders";
 import { COLORS } from "../assets/COLORS";
 import database from "../Database/database";
+import MenuHead from "./MenuHead";
 // import database from "../Database/database";
 
-const OrdersList = ({ ordersList,status }) => {
-
+const MenuList = () => {
   const [isEmpty, setIsEmpty] = useState(false);
+  const [menuList, setMenuList] = useState(null)
 
-  if (!ordersList) {
+  useEffect(() => {
+    let menu = database.getMenu("Aaska123")
+     setMenuList(Object.values(menu))
+  }, [])
+
+  if (!menuList) {
     return <ActivityIndicator size={"large"} color={COLORS.primary} />;
   }
-  if (ordersList.length < 1) {
+  if (menuList.length < 1) {
     return (
       <Text style={{ color: COLORS.background_dark }}>
         {" "}
-        No Orders Available{" "}
+        No Items Available{" "}
       </Text>
     );
   }
   return (
     <FlatList
       style={{ marginTop: 8 }}
-      data={ordersList}
-      keyExtractor={({ orderID }) => orderID}
+      data={menuList}
+      keyExtractor={({ itemID }) => itemID}
       renderItem={({ item }) => {
-        console.log(status)
-        console.log(item.status)
-        if (item.status === status) {
-          return <OrderHead order={item} />;
-        }
+        return <MenuHead item={item} />;
       }}
     />
   );
 };
-export default OrdersList;
+export default MenuList;

@@ -18,7 +18,8 @@ import UpdateMenuScreen from "./src/Screens/UpdateMenuScreen";
 import OrderScreen from "./src/Screens/OrderScreen";
 import { COLORS } from "./src/assets/COLORS";
 import ViewMenuScreen from "./src/Screens/ViewMenuScreen";
-import HomeScreen2 from "./src/Components/TheNewsToday/HomeScreen";
+import SignInScreen from "./src/Screens/SignInScreen";
+import SignUpScreen from "./src/Screens/SignUpScreen";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -35,22 +36,57 @@ export default function App() {
   }
   function HeaderBackground() {
     return (
-      <Image
-        style={{
-          width: "100%",
-          height: "100%",
-        }}
-        source={{
-          uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5OduVzHnXu4aJjauilBiv9ydMyrpvDazTsp88vBgknzMKatxLP9RMJWqIL7VUcVAqG2M&usqp=CAU",
-        }}
-      />
+    <View style={{backgroundColor: 'black'}}></View>
+      // <Image
+      //   style={{
+      //     width: "100%",
+      //     height: "100%",
+      //   }}
+      //   source={{
+      //     uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5OduVzHnXu4aJjauilBiv9ydMyrpvDazTsp88vBgknzMKatxLP9RMJWqIL7VUcVAqG2M&usqp=CAU",
+      //   }}
+      // />
     );
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="News Feed">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
-          name={"TRP Cafe"}
+          name={"Login"}
+          component={SignInScreen}
+          options={{
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 30,
+              color: COLORS.font,
+            },
+            headerLeft: null,
+
+            // headerRight: (props) => <HeaderRight {...props} />,
+            headerShown: false,
+            headerStatusBarHeight: 10,
+            headerBackground: (props) => <HeaderBackground {...props} />,
+          }}
+        />
+        <Stack.Screen
+          name={"SignUp"}
+          component={SignUpScreen}
+          options={{
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 30,
+              color: COLORS.font,
+            },
+            headerLeft: null,
+
+            // headerRight: (props) => <HeaderRight {...props} />,
+            headerShown: false,
+            headerStatusBarHeight: 10,
+            headerBackground: (props) => <HeaderBackground {...props} />,
+          }}
+        />
+        <Stack.Screen
+          name={"Home"}
           component={HomeScreen}
           options={{
             headerTitleStyle: {
@@ -67,8 +103,8 @@ export default function App() {
             //   />
             // ),
             // headerRight: (props) => <HeaderRight {...props} />,
-            headerShown: true,
-            headerStatusBarHeight: 100,
+            headerShown: false,
+            headerStatusBarHeight: 25,
             headerBackground: (props) => <HeaderBackground {...props} />,
           }}
         />
@@ -84,24 +120,7 @@ export default function App() {
             headerLeft: null,
 
             // headerRight: (props) => <HeaderRight {...props} />,
-            headerShown: true,
-            headerStatusBarHeight: 100,
-            headerBackground: (props) => <HeaderBackground {...props} />,
-          }}
-        />
-        <Stack.Screen
-          name={"News Feed"}
-          component={HomeScreen2}
-          options={{
-            headerTitleStyle: {
-              fontWeight: "bold",
-              fontSize: 30,
-              color: COLORS.font,
-            },
-            headerLeft: null,
-
-            // headerRight: (props) => <HeaderRight {...props} />,
-            headerShown: true,
+            headerShown: false,
             headerStatusBarHeight: 100,
             headerBackground: (props) => <HeaderBackground {...props} />,
           }}
@@ -118,7 +137,7 @@ export default function App() {
             headerLeft: null,
 
             // headerRight: (props) => <HeaderRight {...props} />,
-            headerShown: true,
+            headerShown: false,
             headerStatusBarHeight: 100,
             headerBackground: (props) => <HeaderBackground {...props} />,
           }}
@@ -134,7 +153,7 @@ export default function App() {
             },
 
             // headerRight: (props) => <HeaderRight {...props} />,
-            headerShown: true,
+            headerShown: false,
             headerStatusBarHeight: 100,
             headerBackground: (props) => <HeaderBackground {...props} />,
           }}
