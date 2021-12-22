@@ -9,7 +9,7 @@ import {
   Image,
   TouchableOpacity,
   Icon,
-  Button
+  Button,
 } from "react-native";
 import AppStack from "./src/Navigation/AppStack";
 import HomeScreen from "./src/Screens/HomeScreen";
@@ -36,7 +36,7 @@ export default function App() {
   }
   function HeaderBackground() {
     return (
-    <View style={{backgroundColor: 'black'}}></View>
+      <View style={{ backgroundColor: "black" }}></View>
       // <Image
       //   style={{
       //     width: "100%",
@@ -50,7 +50,7 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name={"Login"}
           component={SignInScreen}

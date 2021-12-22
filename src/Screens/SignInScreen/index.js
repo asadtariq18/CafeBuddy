@@ -83,7 +83,9 @@ const SignInScreen = () => {
   };
 
   const onLoginPress = async () => {
-    alert("login Pressed")
+    if(phone=== "03088567481" && password==="Asad18"){
+      navigation.navigate("Home")
+    }
   };
 
   const onSignUpPress = () => {

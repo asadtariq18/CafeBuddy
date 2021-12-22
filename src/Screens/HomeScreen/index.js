@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate("Order");
   };
   const onLogoutPress = () =>{
-    alert("Logout")
+    navigation.navigate("Login")
   }
   return (
     <SafeAreaView style={styles.container}>
